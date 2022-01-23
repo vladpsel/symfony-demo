@@ -9,6 +9,7 @@ services:
     cap_add:
       - ALL
     environment:
+#      change to .env
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_SHEMA}
       MYSQL_USER: ${DB_USER}
