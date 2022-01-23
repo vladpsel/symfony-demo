@@ -1,8 +1,5 @@
 .idea
-.git
 mysql
-
-.env
 
 ###> symfony/framework-bundle ###
 /.env.local
@@ -13,3 +10,5 @@ mysql
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+.env
+.env
