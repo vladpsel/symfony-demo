@@ -6,24 +6,38 @@ services:
     container_name: db
     image: mysql:8.0
     command: --default-authentication-plugin=mysql_native_password
-    cap_add:
-      - ALL
+    restart: always
     environment:
-#      change to .env
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      MYSQL_DATABASE: ${DB_SHEMA}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_USER_PASS}
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: ecoicity
+      MYSQL_PASSWORD: password
+      MYSQL_USER: user
     ports:
       - '3306:3306'
     volumes:
       - ./mysql:/var/lib/mysql
 
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      PMA_USER: root
+      PMA_PASSWORD: secret
+      PMA_HOST: db
+      PMA_PORT: '3306'
+    ports:
+      - '8081:80'
+    links:
+      - db
 
   php:
     container_name: php
     build:
       context: ./php
+    ports:
+      - '9000:9000'
     volumes:
       - ../.:/var/www/ecoicity
       - ./php/php.ini:/usr/local/etc/php/conf.d/php.ini
@@ -40,19 +54,4 @@ services:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - php
-      - db
-
-  phpmyadmin:
-    image: phpmyadmin
-    restart: always
-    container_name: phpmyadmin
-    environment:
-      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-      PMA_USER: ${DB_USER}
-      PMA_PASSWORD: ${DB_USER_PASS}
-      PMA_HOST: db
-      PMA_PORT: 3306
-    ports:
-      - 8081:80
-    links:
       - db
